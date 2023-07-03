@@ -23,6 +23,20 @@ app.get('/', async (req, res) => {
   }
 });
 
+app.post('/', async (req, res) => {
+  try {
+    let url = `https://api.artic.edu/api/v1/artworks`;
+    let searchResponse = await fetch(`${url}/search?q=${req.body.query}`);
+    let searchData = await searchResponse.json();
+    let firstResultId = searchData.data[0].id;
+    let idResponse = await fetch(`${url}/${firstResultId}`);
+    let idData = await idResponse.json();
+    res.send(JSON.stringify(idData.data.image_id));
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`live on port ${PORT}`);
 });
